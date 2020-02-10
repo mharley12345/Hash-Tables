@@ -23,7 +23,8 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+        lenght = len(self.array)
+        return self._hash(key) % self.capacity
 
 
     def _hash_djb2(self, key):
@@ -44,14 +45,11 @@ class HashTable:
 
 
     def insert(self, key, value):
-        '''
-        Store the value with the given key.
-
-        Hash collisions should be handled with Linked List Chaining.
-
-        Fill this in.
-        '''
-        pass
+        hash_table = self
+        hash_key = _hash_mod(key)
+        hash_table[hash_key] = value
+    insert(hash_table, 10, value)
+    print (hash_table)
 
 
 
@@ -63,6 +61,12 @@ class HashTable:
 
         Fill this in.
         '''
+        index = self._hash(key)
+        if self.array[index] == index:
+            return index
+        else:
+            self.array[index] == None
+            print(KeyError())
         pass
 
 
@@ -74,7 +78,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        hash_key = self._hash(key) % len(self.hash_table)
+        storage = self.hashmap[hash_key]
+        for i, kv in enumerate(bucket):
+            k, v = kv
+            return v
+        raise KeyError
+       
+               
 
 
     def resize(self):
@@ -84,7 +95,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        ht2 = HashTable(length=len(self.array)*2)
+        
+        for i in range(len(self.array)):
+            if self.array[i] is None:
+                continue
+            for kvp in self.array[i]:
+                ht2.add(kvp[0], kvp[1])
+
+        self.array = ht2.array
+    
 
 
 
