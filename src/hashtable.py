@@ -24,8 +24,7 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        lenght = len(self.array)
-        return self._hash(key) % self.capacity
+        return hash(key)
 
 
     def _hash_djb2(self, key):
@@ -46,11 +45,24 @@ class HashTable:
 
 
     def insert(self, key, value):
-        hash_table = self
-        hash_key = _hash_mod(key)
-        hash_table[hash_key] = value
-    insert(hash_table, 10, value)
-    print (hash_table)
+        index = self._hash_mod(key)
+        current = self.storage[index] 
+        if current == None:
+            self.storage[index] = LinkedPair(key,value)
+        elif current.next is None:
+            current.next = LinkedPair(key,value)
+
+        else:
+            while current.next is not None:
+                if current.next.key == key:
+                    print(f"Replacing value of key {key} with {value}")
+                    current.next.value = value
+                    return
+                else:
+                    current = current.next
+            current.next = LinkedPair(key,value)
+  
+
 
 
 
@@ -79,12 +91,19 @@ class HashTable:
 
         Fill this in.
         '''
-        hash_key = self._hash(key) % len(self.hash_table)
-         = self.hashmap[hash_key]
-        for i, kv in enumerate(bucket):
-            k, v = kv
-            return v
-        raise KeyError
+        index = self._hash_mod(key)
+        current = self.storage[index]
+        if current == None:
+            print('Printing None')
+            return None
+        else:
+            while current.next is not None:
+                if current.key == key:
+                    print("Value from retrieve: ", current.value)
+                    return current.value
+                else:
+                    current = current.next
+            return current.value
        
                
 
@@ -96,27 +115,34 @@ class HashTable:
 
         Fill this in.
         '''
-        ht2 = HashTable(length=len(self.array)*2)
-        
-        for i in range(len(self.array)):
-            if self.array[i] is None:
-                continue
-            for kvp in self.array[i]:
-                ht2.add(kvp[0], kvp[1])
+        #Create new Hashtable
+        ht = HashTable(self.capacity*2)
 
-        self.array = ht2.array
+        #Copy via loop
+        for node in self.storage:
+            current_node = node
+            while current_node is not None:
+                ht.insert(current_node.key, current_node.value)
+                current_node = current_node.next
+        
+        #Update existing Hashtable
+
+        self.capacity = self.capacity*2
+        self.storage = ht.storage
+
     
 
 
 
+ 
 if __name__ == "__main__":
     ht = HashTable(2)
-
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
 
     print("")
+    
 
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
@@ -136,3 +162,5 @@ if __name__ == "__main__":
     print(ht.retrieve("line_3"))
 
     print("")
+
+
