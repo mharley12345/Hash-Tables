@@ -1,6 +1,7 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -79,7 +80,7 @@ class HashTable:
         Fill this in.
         '''
         hash_key = self._hash(key) % len(self.hash_table)
-        storage = self.hashmap[hash_key]
+         = self.hashmap[hash_key]
         for i, kv in enumerate(bucket):
             k, v = kv
             return v
